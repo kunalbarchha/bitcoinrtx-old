@@ -1,0 +1,27 @@
+# /etc/conf.d/bitcoinrtxd: config file for /etc/init.d/bitcoinrtxd
+
+# Config file location
+#BITCOINRTXD_CONFIGFILE="/etc/bitcoinrtx/bitcoinrtx.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOINRTXD_USER)
+#BITCOINRTXD_PIDDIR="/var/run/bitcoinrtxd"
+
+# What filename to give the pidfile
+#BITCOINRTXD_PIDFILE="${BITCOINRTXD_PIDDIR}/bitcoinrtxd.pid"
+
+# Where to write bitcoinrtxd data (be mindful that the blockchain is large)
+#BITCOINRTXD_DATADIR="/var/lib/bitcoinrtxd"
+
+# User and group to own bitcoinrtxd process
+#BITCOINRTXD_USER="bitcoinrtx"
+#BITCOINRTXD_GROUP="bitcoinrtx"
+
+# Path to bitcoinrtxd executable
+#BITCOINRTXD_BIN="/usr/bin/bitcoinrtxd"
+
+# Nice value to run bitcoinrtxd under
+#BITCOINRTXD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOINRTXD_OPTS="-disablewallet"
+

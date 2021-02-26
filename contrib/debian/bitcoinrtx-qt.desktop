@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Bitcoinrtx
+Comment=Bitcoinrtx P2P Cryptocurrency
+Comment[fr]=Bitcoinrtx, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Bitcoinrtx, eşten eşe kriptografik sanal para birimi
+Exec=bitcoinrtx-qt %u
+Terminal=false
+Type=Application
+Icon=bitcoinrtx128
+MimeType=x-scheme-handler/bitcoinrtx;
+Categories=Office;Finance;

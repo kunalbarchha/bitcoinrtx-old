@@ -1,0 +1,86 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/bitcoinrtx/.bitcoinrtx" ]; then
+	BITCOINRTXD_DEFAULT_DATADIR="/var/lib/bitcoinrtx/.bitcoinrtx"
+else
+	BITCOINRTXD_DEFAULT_DATADIR="/var/lib/bitcoinrtxd"
+fi
+
+BITCOINRTXD_CONFIGFILE=${BITCOINRTXD_CONFIGFILE:-/etc/bitcoinrtx/bitcoinrtx.conf}
+BITCOINRTXD_PIDDIR=${BITCOINRTXD_PIDDIR:-/var/run/bitcoinrtxd}
+BITCOINRTXD_PIDFILE=${BITCOINRTXD_PIDFILE:-${BITCOINRTXD_PIDDIR}/bitcoinrtxd.pid}
+BITCOINRTXD_DATADIR=${BITCOINRTXD_DATADIR:-${BITCOINRTXD_DEFAULT_DATADIR}}
+BITCOINRTXD_USER=${BITCOINRTXD_USER:-bitcoinrtx}
+BITCOINRTXD_GROUP=${BITCOINRTXD_GROUP:-bitcoinrtx}
+BITCOINRTXD_BIN=${BITCOINRTXD_BIN:-/usr/bin/bitcoinrtxd}
+
+name="Bitcoinrtx Core Daemon"
+description="Bitcoinrtx crypto-currency p2p network daemon"
+
+command="/usr/bin/bitcoinrtxd"
+command_args="-pid=\"${BITCOINRTXD_PIDFILE}\" \
+		-conf=\"${BITCOINRTXD_CONFIGFILE}\" \
+		-datadir=\"${BITCOINRTXD_DATADIR}\" \
+		-daemon \
+		${BITCOINRTXD_OPTS}"
+
+required_files="${BITCOINRTXD_CONFIGFILE}"
+start_stop_daemon_args="-u ${BITCOINRTXD_USER} \
+			-N ${BITCOINRTXD_NICE:-0} -w 2000"
+pidfile="${BITCOINRTXD_PIDFILE}"
+retry=60
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${BITCOINRTXD_USER}:${BITCOINRTXD_GROUP}" \
+	"${BITCOINRTXD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${BITCOINRTXD_USER}:${BITCOINRTXD_GROUP}" \
+	"${BITCOINRTXD_PIDDIR}"
+
+	checkpath -f \
+	-o ${BITCOINRTXD_USER}:${BITCOINRTXD_GROUP} \
+	-m 0660 \
+	${BITCOINRTXD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${BITCOINRTXD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run bitcoinrtxd."
+		eerror "The setting must appear in ${BITCOINRTXD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Bitcoinrtx Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

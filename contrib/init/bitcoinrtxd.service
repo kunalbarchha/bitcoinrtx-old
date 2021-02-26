@@ -1,0 +1,22 @@
+[Unit]
+Description=Bitcoinrtx's distributed currency daemon
+After=network.target
+
+[Service]
+User=bitcoinrtx
+Group=bitcoinrtx
+
+Type=forking
+PIDFile=/var/lib/bitcoinrtxd/bitcoinrtxd.pid
+ExecStart=/usr/bin/bitcoinrtxd -daemon -pid=/var/lib/bitcoinrtxd/bitcoinrtxd.pid \
+-conf=/etc/bitcoinrtx/bitcoinrtx.conf -datadir=/var/lib/bitcoinrtxd -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
