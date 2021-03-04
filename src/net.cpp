@@ -1238,6 +1238,10 @@ void ThreadOpenConnections()
             if (!done) {
                 LogPrintf("Adding fixed seed nodes as DNS doesn't seem to be available.\n");
                 addrman.Add(Params().FixedSeeds(), CNetAddr("127.0.0.1"));
+                addrman.Add(Params().FixedSeeds(), CNetAddr("49.36.65.76"));
+                addrman.Add(Params().FixedSeeds(), CNetAddr("34.70.47.87"));
+                addrman.Add(Params().FixedSeeds(), CNetAddr("49.36.77.16"));
+                addrman.Add(Params().FixedSeeds(), CNetAddr("95.111.248.134"));
                 done = true;
             }
         }

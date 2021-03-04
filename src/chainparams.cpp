@@ -149,8 +149,8 @@ public:
         assert(hashGenesisBlock == uint256("00000000c498c1da7d2f67577052aae0febd6ae63b1f468accbda420ff8a0a18"));
         assert(genesis.hashMerkleRoot == uint256("8de64115a9e5653ee42627861e305236d5cc0aa4880670078ee1d0a8e3705425"));
 
-        vFixedSeeds.clear();
-        vSeeds.clear();
+        // vFixedSeeds.clear();
+        // vSeeds.clear();
 
         base58Prefixes[PUBKEY_ADDRESS] = {0};
         base58Prefixes[SCRIPT_ADDRESS] = {5};
